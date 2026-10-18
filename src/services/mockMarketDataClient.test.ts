@@ -36,6 +36,18 @@ describe('MockMarketDataClient', () => {
     await expect(extended.getQuotes(['IBM'])).rejects.toMatchObject({ code: 'INVALID_SYMBOL' });
   });
 
+  it('recognises the extra lookup tickers but still rejects unknown ones', async () => {
+    const [nvda] = await client.getHistory(['NVDA'], 'week');
+    expect(nvda.points.length).toBeGreaterThan(1);
+    await expect(client.getHistory(['ZZZZ'], 'week')).rejects.toMatchObject({ code: 'INVALID_SYMBOL' });
+  });
+
+  it('models a valid symbol with no data: empty history, and no quote', async () => {
+    const [series] = await client.getHistory(['NODATA'], 'quarter');
+    expect(series.points).toEqual([]);
+    await expect(client.getQuotes(['NODATA'])).rejects.toMatchObject({ code: 'UPSTREAM_ERROR' });
+  });
+
   it('rejects unknown symbols with INVALID_SYMBOL', async () => {
     await expect(client.getQuotes(['NOPE'])).rejects.toMatchObject({
       code: 'INVALID_SYMBOL',

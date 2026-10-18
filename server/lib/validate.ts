@@ -1,10 +1,9 @@
-import { ApiError, TIME_WINDOW_IDS } from './errors';
+import { SYMBOL_PATTERN } from '../../src/domain/symbols';
 import type { TimeWindow } from '../../src/types/market';
+import { ApiError, TIME_WINDOW_IDS } from './errors';
 
 /** Upper bound per request. IBM + 4 competitors = 5; headroom is left for user-selected symbols. */
 export const MAX_SYMBOLS_PER_REQUEST = 10;
-
-const SYMBOL_PATTERN = /^\^?[A-Z0-9][A-Z0-9.=-]{0,14}$/;
 
 /** Parses "ibm, msft" into ["IBM", "MSFT"]: trimmed, upper-cased, de-duplicated, format-checked. */
 export function parseSymbols(raw: unknown): string[] {

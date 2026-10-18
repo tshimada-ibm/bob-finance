@@ -25,3 +25,12 @@ body { margin: 0; }
 .ranking-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
 .ranking-table th, .ranking-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #e0e0e0; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+.symbol-search label { display: block; font-weight: 600; margin-bottom: 8px; }
+.symbol-search__row { display: flex; gap: 8px; flex-wrap: wrap; }
+.symbol-search input { flex: 1 1 200px; padding: 8px 12px; border: 1px solid #8d8d8d; border-radius: 0; font: inherit; }
+.symbol-search input[aria-invalid='true'] { border-color: var(--down); }
+.symbol-search button { padding: 8px 16px; border: 1px solid #0f62fe; background: #0f62fe; color: #fff; cursor: pointer; font: inherit; }
+.symbol-search button[type='button'] { background: #fff; color: #0f62fe; }
+.field-error { color: var(--down); margin: 8px 0 0; font-size: 0.875rem; }
+.selected-summary { margin: 12px 0 0; }

@@ -9,16 +9,18 @@ interface ChartCardProps {
   loading?: boolean;
   error?: Error;
   empty?: boolean;
+  /** Shown instead of the generic "No data available." when `empty` is set. */
+  emptyMessage?: string;
   onRetry?: () => void;
   children: ReactNode;
 }
 
 /** Reusable card chrome: owns the title plus loading / error / empty rendering around any chart. */
-export function ChartCard({ title, subtitle, loading, error, empty, onRetry, children }: ChartCardProps) {
+export function ChartCard({ title, subtitle, loading, error, empty, emptyMessage, onRetry, children }: ChartCardProps) {
   let body: ReactNode = children;
   if (error) body = <ErrorState message={error.message} onRetry={onRetry} />;
   else if (loading) body = <LoadingState />;
-  else if (empty) body = <EmptyState />;
+  else if (empty) body = <EmptyState message={emptyMessage} />;
 
   return (
     <section className="card chart-card" aria-label={title}>

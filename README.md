@@ -129,6 +129,8 @@ Open the URL that Vite prints (usually http://localhost:5173).
 - `npm run dev` shows five quote cards (IBM, MSFT, ORCL, SAP, CRM), the three tabs (Current day, Last 7 days, Last quarter), and a comparison chart with a ranking table. Switching tabs changes the chart without a page reload.
 - With `npm run dev:live` running, `http://localhost:3001/api/quotes?symbols=IBM` returns JSON with a price, and `…/api/history?symbols=IBM&window=week` returns an ascending list of points.
 - Failure cases behave as designed: an unknown ticker returns HTTP 400 with `"code":"INVALID_SYMBOL"`, an invalid `window` returns HTTP 400 with `"code":"BAD_REQUEST"`, and the dashboard shows an error message with a **Retry** button if the data service is unreachable.
+- The **Look up another company** box under the comparison chart accepts any ticker. In mock mode, try `NVDA`, `AAPL`, `GOOGL`, `AMZN` or `ACN` for a chart, `NODATA` for the "no price data" message, and `ZZZZ` for "no market data found". Malformed input such as `IBM;DROP` is rejected in the browser with no request. The comparison cards, chart and ranking table never change, and the extra chart never shows another company's data.
+
 
 
 ## Important Practical Note
