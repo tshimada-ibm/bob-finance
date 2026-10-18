@@ -1,4 +1,5 @@
 import { DEFAULT_COMPANIES } from '../config/companies';
+import { MOCK_EXTRA_COMPANIES } from '../config/mockTickers';
 import type { Company, PricePoint, Quote, Series, TimeWindow } from '../types/market';
 import { MarketDataError, type MarketDataClient } from './marketDataClient';
 
@@ -31,7 +32,7 @@ export class MockMarketDataClient implements MarketDataClient {
   constructor(
     private readonly now: () => Date = () => new Date(),
     private readonly latencyMs = 150,
-    companies: Company[] = DEFAULT_COMPANIES,
+    companies: Company[] = [...DEFAULT_COMPANIES, ...MOCK_EXTRA_COMPANIES],
   ) {
     this.companies = new Map(companies.map((c) => [c.symbol, c]));
   }
@@ -58,6 +59,7 @@ export class MockMarketDataClient implements MarketDataClient {
   }
 
   private buildPoints(symbol: string, window: TimeWindow): PricePoint[] {
+    if (this.companies.get(symbol)?.mockNoData) return [];
     const { count, stepMs } = WINDOW_SHAPE[window];
     const rand = mulberry32(hash(`${symbol}:${window}`));
     const end = this.now().getTime();
@@ -84,6 +86,10 @@ export class MockMarketDataClient implements MarketDataClient {
     return symbols.map((symbol) => {
       this.assertKnown(symbol);
       const points = this.buildPoints(symbol, 'day');
+      if (points.length === 0) {
+        // Same as the live source: a symbol with no price yields no quote.
+        throw new MarketDataError('UPSTREAM_ERROR', `No price is currently available for ${symbol}.`);
+      }
       const first = points[0].close;
       const last = points[points.length - 1];
       return {

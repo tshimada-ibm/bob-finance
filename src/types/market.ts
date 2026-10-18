@@ -8,6 +8,8 @@ export interface Company {
   primary?: boolean;
   /** Starting price for the offline mock data source only; ignored by the live Yahoo source. */
   mockBasePrice?: number;
+  /** Offline mock only: the symbol is valid but has no price history (exercises the "no data" UI). */
+  mockNoData?: boolean;
 }
 
 export interface Quote {

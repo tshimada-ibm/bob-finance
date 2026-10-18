@@ -4,7 +4,9 @@ import { ChartCard } from '../components/charts/ChartCard';
 import { ComparisonLineChart } from '../components/charts/ComparisonLineChart';
 import { ErrorState } from '../components/feedback/ErrorState';
 import { LoadingState } from '../components/feedback/LoadingState';
+import { SymbolSearch } from '../components/controls/SymbolSearch';
 import { TimeWindowTabs } from '../components/layout/TimeWindowTabs';
+import { SelectedCompanyPanel } from '../components/panels/SelectedCompanyPanel';
 import { RankingTable } from '../components/tables/RankingTable';
 import { DEFAULT_COMPANIES } from '../config/companies';
 import { TIME_WINDOWS } from '../config/timeWindows';
@@ -14,6 +16,9 @@ import type { Company, TimeWindow } from '../types/market';
 
 export function DashboardPage({ companies = DEFAULT_COMPANIES }: { companies?: Company[] }) {
   const [window, setWindow] = useState<TimeWindow>('day');
+  // User-selected extra company. Deliberately NOT part of `symbols` below: the comparison dashboard
+  // keeps tracking exactly the configured companies.
+  const [selectedSymbol, setSelectedSymbol] = useState<string>();
   const symbols = companies.map((c) => c.symbol);
   const quotes = useQuotes(symbols);
   const history = useHistory(symbols, window);
@@ -51,6 +56,9 @@ export function DashboardPage({ companies = DEFAULT_COMPANIES }: { companies?: C
           </>
         )}
       </ChartCard>
+
+      <SymbolSearch selected={selectedSymbol} onSelect={setSelectedSymbol} onClear={() => setSelectedSymbol(undefined)} />
+      {selectedSymbol && <SelectedCompanyPanel key={selectedSymbol} symbol={selectedSymbol} window={window} />}
     </main>
   );
 }
